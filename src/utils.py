@@ -51,7 +51,7 @@ def save_dict_to_excel(data_dict, file_name, folder="output"):
     
     print(f"Excel file saved to {file_path}")
 
-def read_config(config_file_name, base_folder="CustomerAnalytics", config_folder="Config"):
+def read_config(config_file_name="config.yaml", base_folder="CustomerAnalytics", config_folder="Config"):
     """
     Reads a configuration file from the Config folder within the CustomerAnalytics folder.
 
