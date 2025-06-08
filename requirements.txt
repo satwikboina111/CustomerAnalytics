@@ -1,0 +1,13 @@
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+jupyterlab
+ipykernel
+openpyxl
+xlrd
+statsmodels
+plotly
+category_encoders
+shap
