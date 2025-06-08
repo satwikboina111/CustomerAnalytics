@@ -67,6 +67,7 @@ def read_config(config_file_name="config.yaml", base_folder="CustomerAnalytics",
     - FileNotFoundError: If the configuration file does not exist.
     """
     # Construct the full path to the configuration file
+    base_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)),"..",base_folder)  # Get the directory of the current file
     config_path = os.path.join(base_folder, config_folder, config_file_name)
     
     if not os.path.exists(config_path):
