@@ -4,6 +4,8 @@ import yaml
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from scipy.cluster.hierarchy import dendrogram, linkage
+
 def save_dataframe_to_csv(df, file_name, folder="output"):
     """
     Saves a DataFrame to a CSV file in the specified folder.
@@ -120,7 +122,7 @@ def plot_distribution(df,column, title="Distribution Plot", figsize=(10, 6)):
     plt.tight_layout()
     plt.show()
 
-def scatter_plot(df, x_column, y_column, title="Scatter Plot", figsize=(10, 6)):
+def scatter_plot(df, x_column, y_column, title="Scatter Plot", figsize=(10, 6), hue=None):
     """
     Plots a scatter plot for two specified columns in the DataFrame.
 
@@ -132,7 +134,7 @@ def scatter_plot(df, x_column, y_column, title="Scatter Plot", figsize=(10, 6)):
     - figsize (tuple): The size of the figure. Defaults to (10, 6).
     """
     plt.figure(figsize=figsize)
-    sns.scatterplot(data=df, x=x_column, y=y_column)
+    sns.scatterplot(data=df, x=x_column, y=y_column,hue= hue, palette='viridis')
     plt.title(title)
     plt.xlabel(x_column)
     plt.ylabel(y_column)
@@ -152,4 +154,41 @@ def box_plot(df, column, title="Box Plot", figsize=(10, 6)):
     sns.boxplot(x=df[column])
     plt.title(title)
     plt.xlabel(column)
+    plt.show()
+
+def plot_dendrogram(clusters, levels,method='ward', figsize=(10, 8)):
+    """
+    Plots a dendrogram for hierarchical clustering of the DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - method (str): The linkage method to use for clustering. Defaults to 'ward'.
+    - figsize (tuple): The size of the figure. Defaults to (10, 8).
+    """
+    
+    
+    plt.figure(figsize=figsize)
+    
+    dendrogram(clusters, orientation='top',truncate_mode="level",p=levels ,no_labels=True, distance_sort='descending', show_leaf_counts=True)
+    plt.title('Hierarchical Clustering Dendrogram')
+    plt.xlabel('Observations')
+    plt.ylabel('Distance')
+    plt.show()
+
+def plot_elbow(wcss, title="Elbow Method", figsize=(10, 6)):
+    """
+    Plots the elbow method for determining the optimal number of clusters.
+
+    Parameters:
+    - wcss (list): List of WCSS values for different numbers of clusters.
+    - title (str): The title of the plot. Defaults to "Elbow Method".
+    - figsize (tuple): The size of the figure. Defaults to (10, 6).
+    """
+    plt.figure(figsize=figsize)
+    plt.plot(range(1, len(wcss) + 1), wcss, marker='o')
+    plt.title(title)
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('WCSS')
+    plt.xticks(range(1, len(wcss) + 1))
+    plt.grid()
     plt.show()
