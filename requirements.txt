@@ -11,3 +11,4 @@ statsmodels
 plotly
 category_encoders
 shap
+scipy

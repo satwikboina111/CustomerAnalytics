@@ -1,6 +1,8 @@
 import os
 import pandas as pd
-import json
+import yaml
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def save_dataframe_to_csv(df, file_name, folder="output"):
     """
@@ -51,7 +53,7 @@ def save_dict_to_excel(data_dict, file_name, folder="output"):
     
     print(f"Excel file saved to {file_path}")
 
-def read_config(config_file_name="config.yaml", base_folder="CustomerAnalytics", config_folder="Config"):
+def read_config(config_file_name="config.yaml",config_folder="Config"):
     """
     Reads a configuration file from the Config folder within the CustomerAnalytics folder.
 
@@ -67,7 +69,8 @@ def read_config(config_file_name="config.yaml", base_folder="CustomerAnalytics",
     - FileNotFoundError: If the configuration file does not exist.
     """
     # Construct the full path to the configuration file
-    base_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)),"..",base_folder)  # Get the directory of the current file
+    base_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)),"..")  # Get the directory of the current file
+    print(base_folder)
     config_path = os.path.join(base_folder, config_folder, config_file_name)
     
     if not os.path.exists(config_path):
@@ -75,6 +78,78 @@ def read_config(config_file_name="config.yaml", base_folder="CustomerAnalytics",
     
     # Read and return the configuration file contents
     with open(config_path, 'r') as file:
-        config_data = json.load(file)
+        config_data = yaml.safe_load(file)
     
     return config_data
+
+
+def plot_correlation_matrix(df,title = "Correlation Matrix", figsize=(10, 8)):
+    """
+    Plots a correlation matrix for the given DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame for which to plot the correlation matrix.
+    - title (str): The title of the plot. Defaults to "Correlation Matrix".
+    - figsize (tuple): The size of the figure. Defaults to (10, 8).
+    """
+    plt.figure(figsize=figsize)
+    sns.heatmap(df.corr(), annot=True, fmt=".2f", cmap='coolwarm', square=True, cbar_kws={"shrink": .8})
+    plt.title(title)
+    plt.xticks(rotation=45)
+    plt.yticks(rotation=0)
+    plt.show()
+
+def plot_distribution(df,column, title="Distribution Plot", figsize=(10, 6)):
+    """
+    Plots the distribution of a specified column in the DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - column (str): The column for which to plot the distribution.
+    - title (str): The title of the plot. Defaults to "Distribution Plot".
+    - figsize (tuple): The size of the figure. Defaults to (10, 6).
+    """
+    plt.figure(figsize=figsize)
+    sns.histplot(df[column], kde=True, bins=30)
+    plt.title(title)
+    plt.xlabel(column)
+    plt.ylabel('Frequency')
+    plt.axvline(df[column].mean(), color='red', linestyle='dashed', linewidth=1, label='Mean')
+    plt.axvline(df[column].median(), color='blue', linestyle='dashed', linewidth=1, label='Median')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+def scatter_plot(df, x_column, y_column, title="Scatter Plot", figsize=(10, 6)):
+    """
+    Plots a scatter plot for two specified columns in the DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - x_column (str): The column for the x-axis.
+    - y_column (str): The column for the y-axis.
+    - title (str): The title of the plot. Defaults to "Scatter Plot".
+    - figsize (tuple): The size of the figure. Defaults to (10, 6).
+    """
+    plt.figure(figsize=figsize)
+    sns.scatterplot(data=df, x=x_column, y=y_column)
+    plt.title(title)
+    plt.xlabel(x_column)
+    plt.ylabel(y_column)
+    plt.show()
+
+def box_plot(df, column, title="Box Plot", figsize=(10, 6)):
+    """
+    Plots a box plot for a specified column in the DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - column (str): The column for which to plot the box plot.
+    - title (str): The title of the plot. Defaults to "Box Plot".
+    - figsize (tuple): The size of the figure. Defaults to (10, 6).
+    """
+    plt.figure(figsize=figsize)
+    sns.boxplot(x=df[column])
+    plt.title(title)
+    plt.xlabel(column)
+    plt.show()
