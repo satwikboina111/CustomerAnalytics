@@ -3,7 +3,9 @@ import pandas as pd
 import yaml
 import matplotlib.pyplot as plt
 import seaborn as sns
+from mpl_toolkits.mplot3d import Axes3D
 
+import pickle as pkl
 from scipy.cluster.hierarchy import dendrogram, linkage
 
 def save_dataframe_to_csv(df, file_name, folder="output"):
@@ -192,3 +194,82 @@ def plot_elbow(wcss, title="Elbow Method", figsize=(10, 6)):
     plt.xticks(range(1, len(wcss) + 1))
     plt.grid()
     plt.show()
+
+
+def plot_line_chart(df, x_column, y_column, title="Line Chart", figsize=(10, 6)):
+    """
+    Plots a line chart for two specified columns in the DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - x_column (str): The column for the x-axis.
+    - y_column (str): The column for the y-axis.
+    - title (str): The title of the plot. Defaults to "Line Chart".
+    - figsize (tuple): The size of the figure. Defaults to (10, 6).
+    """
+    plt.figure(figsize=figsize)
+    sns.lineplot(data=df, x=x_column, y=y_column,markers='o', dashes=False)
+    plt.xticks(rotation=45)
+    plt.title(title)
+    plt.xlabel(x_column)
+    plt.ylabel(y_column)
+    plt.show()
+
+def plot_pca_explained_variance(pca, title="PCA Explained Variance", figsize=(10, 6)):
+    """
+    Plots the cumulative explained variance ratio of PCA components.
+
+    Parameters:
+    - pca (PCA): The PCA object after fitting the data.
+    - title (str): The title of the plot. Defaults to "PCA Explained Variance".
+    - figsize (tuple): The size of the figure. Defaults to (10, 6).
+    """
+    plt.figure(figsize=figsize)
+    plt.plot(range(1, len(pca.explained_variance_ratio_) + 1), pca.explained_variance_ratio_.cumsum(), marker='o', linestyle='-', alpha=0.7)
+    plt.title(title)
+    plt.xlabel('Principal Component')
+    plt.ylabel('Cumulative Explained Variance Ratio')
+    plt.xticks(range(1, len(pca.explained_variance_ratio_) + 1))
+    plt.grid()
+    plt.show()
+
+def plot_3d_scatter(df, x_col, y_col, z_col, hue_col=None, title="3D Scatter Plot"):
+    """
+    Plots a 3D scatter plot for three specified columns in the DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing the data.
+    - x_col (str): The column for the x-axis.
+    - y_col (str): The column for the y-axis.
+    - z_col (str): The column for the z-axis.
+    - hue_col (str): The column for coloring the points (optional).
+    - title (str): The title of the plot. Defaults to "3D Scatter Plot".
+    """
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    
+    if hue_col:
+        scatter = ax.scatter(df[x_col], df[y_col], df[z_col], c=df[hue_col], cmap='viridis', s=50)
+        plt.colorbar(scatter, ax=ax, label=hue_col)
+    else:
+        ax.scatter(df[x_col], df[y_col], df[z_col], s=50)
+    
+    ax.set_xlabel(x_col)
+    ax.set_ylabel(y_col)
+    ax.set_zlabel(z_col)
+    ax.set_title(title)
+    plt.show()
+
+def export_to_pickle(object,filename,folder = "artifacts"):
+    filename = f"{filename}.pickle" if ".pickle" not in filename else filename
+    filepath = os.path.join(os.getcwd(),"..","Data",folder)
+
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
+
+    filepath = os.path.join(filepath,filename)
+
+    pkl.dump(object,open(filepath,"wb"))
+    print("object saved at : ",filepath)
+
+

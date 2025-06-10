@@ -37,3 +37,7 @@ Thumbs.db
 # Text and Markdown files
 # *.txt
 # *.md
+
+# Artifacts
+*.pickle
+*.pkl
