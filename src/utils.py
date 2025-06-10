@@ -272,4 +272,51 @@ def export_to_pickle(object,filename,folder = "artifacts"):
     pkl.dump(object,open(filepath,"wb"))
     print("object saved at : ",filepath)
 
+def load_pickle_object(filename,folder = 'artifacts'):
+    filename = f"{filename}.pickle" if ".pickle" not in filename else filename
+    filepath = os.path.join(os.getcwd(),"..","Data",folder,filename)
+
+    if not os.path.exists(filepath):
+        print("pickle file doesn't exist.")
+        return
+    
+    object = pkl.load(open(filepath,"rb"))
+    return object
+
+
+def plot_pie_chart(values, labels, title="Pie Chart", 
+                   colors=None, explode=None, autopct='%1.1f%%', 
+                   startangle=90, shadow=False, figsize=(6, 6), 
+                   legend=True, legend_loc="best"):
+    """
+    Plots a pie chart using matplotlib.
+
+    Parameters:
+    - values (list): Numerical values for each wedge.
+    - labels (list): Corresponding labels for each wedge.
+    - title (str): Title of the chart.
+    - colors (list): Optional list of colors.
+    - explode (list): Fraction to offset each wedge.
+    - autopct (str/bool): Format string for value display or False for no display.
+    - startangle (int): Starting angle of the pie chart.
+    - shadow (bool): Whether to draw a shadow.
+    - figsize (tuple): Size of the figure.
+    - legend (bool): Whether to display a legend.
+    - legend_loc (str): Location of the legend.
+    """
+    plt.figure(figsize=figsize)
+    wedges, texts, autotexts = plt.pie(
+        values, labels=labels, colors=colors, explode=explode,
+        autopct=autopct, startangle=startangle, shadow=shadow
+    )
+    
+    plt.title(title)
+    
+    if legend:
+        plt.legend(wedges, labels, title="Labels", loc=legend_loc)
+    
+    plt.axis('equal')  # Equal aspect ratio ensures pie is drawn as a circle.
+    plt.tight_layout()
+    plt.show()
+
 

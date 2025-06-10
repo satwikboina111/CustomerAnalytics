@@ -1,2 +1,3 @@
 filenames :
   segmentation : "segmentation_data.csv"
+  purchase_data : "purchase_data.csv"
